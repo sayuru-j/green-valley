@@ -22,5 +22,6 @@ app.use("/api/banquet-packages", require("./routes/banquet"));
 app.use("/api/rooms", require("./routes/rooms"));
 app.use("/api/menu", require("./routes/menu"));
 app.use("/api/reviews", require("./routes/reviews"));
+app.use("/api/chat", require("./routes/chat"));
 
 module.exports = app;

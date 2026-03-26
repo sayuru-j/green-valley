@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { API_BASE } from "@/lib/auth";
 
 interface Action {
   label: string;
@@ -58,83 +59,55 @@ const ChatWidget = () => {
     scrollToBottom();
   }, [messages, isTyping, isOpen]);
 
-  const detectIntent = (msg: string, currentFallback: number) => {
-    const lowerText = msg.toLowerCase();
-    
-    if (lowerText.includes("book") || lowerText.includes("reservation") || lowerText.includes("contact") || lowerText.includes("call") || lowerText.includes("help")) {
-      return {
-        text: "I can help you with that! Please visit our Contact page or click below.",
-        actions: [{ label: "Go to Contact Page", path: "/contact" }, { label: "Book Now", path: "/booking" }],
-        newFallback: 0
-      };
-    }
-    if (lowerText.includes("room") || lowerText.includes("stay") || lowerText.includes("price")) {
-      return {
-        text: "Our rooms start from LKR 30,000 per night. Would you like to explore rooms?",
-        actions: [{ label: "View Rooms", path: "/rooms" }, { label: "Book Now", path: "/booking" }],
-        newFallback: 0
-      };
-    }
-    if (lowerText.includes("wedding") || lowerText.includes("event") || lowerText.includes("banquet")) {
-      return {
-        text: "We offer luxury banquet halls. You can explore them on our Banquet page.",
-        actions: [{ label: "View Banquet Halls", path: "/banquet" }],
-        newFallback: 0
-      };
-    }
-    if (lowerText.includes("check out") || lowerText.includes("checkout")) {
-      return { text: "Our standard checkout time is 11:00 AM.", newFallback: 0 };
-    }
-    if (lowerText.includes("check in") || lowerText.includes("checkin")) {
-      return { text: "Check-in starts from 2:00 PM.", newFallback: 0 };
-    }
-
-    const nextFallback = currentFallback + 1;
-    if (nextFallback >= 2) {
-      return {
-        text: "I recommend contacting our support team for better assistance.",
-        actions: [{ label: "Go to Contact Page", path: "/contact" }],
-        newFallback: 0
-      };
-    }
-    return {
-      text: "I'm not sure about that. Would you like to contact our team?",
-      actions: [{ label: "Contact Us", path: "/contact" }],
-      newFallback: nextFallback
-    };
-  };
-
-  const getBotResponse = (userText: string) => {
+  const getBotResponse = async (userText: string, currentMessages: Message[]) => {
     setIsTyping(true);
-    const { text, actions, newFallback } = detectIntent(userText, fallbackCount);
-    setFallbackCount(newFallback);
     
-    // Dynamic delay 500ms - 1200ms
-    const delay = Math.min(1200, Math.max(500, text.length * 20));
-    
-    setTimeout(() => {
+    try {
+      const response = await fetch(`${API_BASE}/api/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: userText,
+          history: currentMessages,
+        }),
+      });
+
+      const data = await response.json();
+
       setMessages(prev => [...prev, {
         id: Date.now().toString(),
-        text,
-        sender: "bot",
-        actions
+        text: data.response || "I am currently unavailable. Please try again later.",
+        sender: "bot"
       }]);
+    } catch (error) {
+      console.error("Chat Error:", error);
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        text: "I encountered an error connecting to the server. Please check your connection or contact support.",
+        sender: "bot",
+        actions: [{ label: "Contact Us", path: "/contact" }]
+      }]);
+    } finally {
       setIsTyping(false);
-    }, delay);
+    }
   };
 
   const handleSend = (overrideText?: string) => {
     const text = overrideText || inputValue.trim();
     if (!text) return;
 
-    setMessages(prev => [...prev, { 
+    const newMessages: Message[] = [...messages, { 
       id: Date.now().toString(), 
       text, 
       sender: "user" 
-    }]);
+    }];
+    
+    setMessages(newMessages);
     setInputValue("");
     
-    getBotResponse(text);
+    getBotResponse(text, newMessages);
   };
 
   const handleActionClick = (action: Action) => {

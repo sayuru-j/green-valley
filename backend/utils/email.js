@@ -48,28 +48,74 @@ function formatDateLong(value) {
 // PENDING EMAIL
 // ===============================
 const sendPendingEmail = async (to, name, room, checkin, checkout) => {
+  const guestName = escapeHtml(name);
+  const roomName = escapeHtml(room);
+  const checkinDate = escapeHtml(checkin);
+  const checkoutDate = escapeHtml(checkout);
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;font-family:Georgia,'Times New Roman',serif;background:#f3f4f6;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f3f4f6;padding:24px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+          <tr>
+            <td style="background:#1f4d3a;color:#ffffff;padding:20px 24px;">
+              <p style="margin:0;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;opacity:0.9;">Green Valley Resort</p>
+              <h1 style="margin:8px 0 0;font-size:22px;font-weight:600;">Booking Request Received</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:24px;">
+              <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#374151;">Dear ${guestName},</p>
+              <p style="margin:0 0 20px;font-size:15px;line-height:1.65;color:#4b5563;">
+                Thank you for choosing Green Valley Resort. We have received your booking request and our team is currently reviewing it.
+              </p>
+              <p style="margin:0 0 12px;font-size:13px;font-weight:600;color:#1f2937;text-transform:uppercase;letter-spacing:0.05em;">Request Details</p>
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin-bottom:24px;">
+                <tr>
+                  <td style="padding:10px 14px;border:1px solid #e5e7eb;background:#f9fafb;font-weight:600;color:#1f2937;width:40%;">Suite / Room</td>
+                  <td style="padding:10px 14px;border:1px solid #e5e7eb;color:#374151;">${roomName}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px;border:1px solid #e5e7eb;background:#f9fafb;font-weight:600;color:#1f2937;width:40%;">Check-in</td>
+                  <td style="padding:10px 14px;border:1px solid #e5e7eb;color:#374151;">${checkinDate}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px;border:1px solid #e5e7eb;background:#f9fafb;font-weight:600;color:#1f2937;width:40%;">Check-out</td>
+                  <td style="padding:10px 14px;border:1px solid #e5e7eb;color:#374151;">${checkoutDate}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px;border:1px solid #e5e7eb;background:#f9fafb;font-weight:600;color:#1f2937;width:40%;">Status</td>
+                  <td style="padding:10px 14px;border:1px solid #e5e7eb;color:#d97706;font-weight:600;">Pending Approval</td>
+                </tr>
+              </table>
+              <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#4b5563;">
+                You will receive another email shortly once your booking has been confirmed by our management.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 24px;background:#f9fafb;border-top:1px solid #e5e7eb;">
+              <p style="margin:0;font-size:12px;color:#6b7280;line-height:1.5;">
+                This is an automated message regarding your booking request.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to,
-    subject: "Booking Received - Green Valley Resort",
-    html: `
-      <h2>Hello ${name},</h2>
-      <p>Your booking request has been received.</p>
-
-      <h3>Booking Details:</h3>
-      <ul>
-        <li><strong>Room:</strong> ${room}</li>
-        <li><strong>Check-in:</strong> ${checkin}</li>
-        <li><strong>Check-out:</strong> ${checkout}</li>
-      </ul>
-
-      <p>Status: <strong style="color:orange;">Pending Approval</strong></p>
-
-      <p>We will confirm your booking shortly.</p>
-
-      <br/>
-      <p>Thank you,<br/>Green Valley Resort</p>
-    `,
+    subject: "Booking Request Received - Green Valley Resort",
+    html,
   });
 };
 
@@ -201,18 +247,55 @@ const sendConfirmEmail = async (booking) => {
 // REJECT EMAIL
 // ===============================
 const sendRejectEmail = async (to, name) => {
+  const guestName = escapeHtml(name);
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<body style="margin:0;padding:0;font-family:Georgia,'Times New Roman',serif;background:#f3f4f6;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f3f4f6;padding:24px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+          <tr>
+            <td style="background:#7f1d1d;color:#ffffff;padding:20px 24px;">
+              <p style="margin:0;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;opacity:0.9;">Green Valley Resort</p>
+              <h1 style="margin:8px 0 0;font-size:22px;font-weight:600;">Booking Update</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:24px;">
+              <p style="margin:0 0 16px;font-size:16px;line-height:1.6;color:#374151;">Dear ${guestName},</p>
+              <p style="margin:0 0 20px;font-size:15px;line-height:1.65;color:#4b5563;">
+                We regret to inform you that we are unable to confirm your booking for the requested dates. Our suites are fully booked or unavailable during this period.
+              </p>
+              <p style="margin:0 0 8px;font-size:14px;line-height:1.6;color:#4b5563;">
+                We sincerely apologize for any inconvenience this may cause. We would love to host you in the future, please feel free to check alternative dates on our website.
+              </p>
+              <p style="margin:0;font-size:14px;line-height:1.6;color:#4b5563;">
+                If you have any questions, please contact our support team.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 24px;background:#f9fafb;border-top:1px solid #e5e7eb;">
+              <p style="margin:0;font-size:12px;color:#6b7280;line-height:1.5;">
+                This is an automated message regarding your booking request.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
   await transporter.sendMail({
     from: process.env.EMAIL_USER,
     to,
-    subject: "Booking Rejected - Green Valley Resort",
-    html: `
-      <h2>Booking Update ❌</h2>
-      <p>Dear ${name},</p>
-
-      <p>Unfortunately your booking could not be confirmed.</p>
-
-      <p>Please try another date or contact us.</p>
-    `,
+    subject: "Booking Update - Green Valley Resort",
+    html,
   });
 };
 

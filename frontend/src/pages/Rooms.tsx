@@ -94,12 +94,6 @@ const Rooms = () => {
                   </p>
 
                   <div className="flex flex-wrap gap-2 mb-6">
-                    <span className="bg-secondary px-3 py-1.5 rounded-full text-xs text-forest font-medium tracking-wide">
-                      Luxury Suite
-                    </span>
-                    <span className="bg-secondary px-3 py-1.5 rounded-full text-xs text-forest font-medium tracking-wide">
-                      Private Bathroom
-                    </span>
                     {room.max_occupancy != null && Number(room.max_occupancy) > 0 ? (
                       <span className="bg-secondary px-3 py-1.5 rounded-full text-xs text-forest font-medium tracking-wide">
                         Up to {Number(room.max_occupancy)} guests
