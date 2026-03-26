@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Lato:wght@300;400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================= */
+/* ROOT VARIABLES */
+/* ========================= */
+
+@layer base {
+  :root {
+    --background: 40 33% 96%;
+    --foreground: 150 20% 15%;
+
+    --card: 40 30% 97%;
+    --card-foreground: 150 20% 15%;
+
+    --popover: 40 30% 97%;
+    --popover-foreground: 150 20% 15%;
+
+    --primary: 145 35% 22%;
+    --primary-foreground: 40 33% 96%;
+
+    --secondary: 40 30% 92%;
+    --secondary-foreground: 145 35% 22%;
+
+    --muted: 40 20% 93%;
+    --muted-foreground: 150 10% 45%;
+
+    --accent: 42 76% 50%;
+    --accent-foreground: 150 30% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 40 33% 96%;
+
+    --border: 40 20% 88%;
+    --input: 40 20% 88%;
+    --ring: 145 35% 22%;
+
+    --radius: 0.75rem;
+
+    --gold: 42 76% 50%;
+    --gold-light: 42 70% 65%;
+    --gold-dark: 42 80% 38%;
+    --forest: 145 35% 22%;
+    --forest-light: 145 25% 35%;
+    --forest-dark: 145 40% 12%;
+    --beige: 40 33% 96%;
+    --beige-dark: 40 25% 88%;
+    --cream: 40 40% 94%;
+
+    --sidebar-background: 145 35% 15%;
+    --sidebar-foreground: 40 33% 96%;
+    --sidebar-primary: 42 76% 50%;
+    --sidebar-primary-foreground: 145 35% 15%;
+    --sidebar-accent: 145 25% 20%;
+    --sidebar-accent-foreground: 40 33% 96%;
+    --sidebar-border: 145 25% 25%;
+    --sidebar-ring: 42 76% 50%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+/* ========================= */
+/* GREEN BUTTON COMPONENT */
+/* ========================= */
+
+@layer components {
+
+  .btn-primary {
+    @apply inline-block px-8 py-3 rounded-lg text-sm font-semibold tracking-wider uppercase text-primary-foreground transition-all duration-300 shadow-md;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--primary)),
+      hsl(var(--forest-dark))
+    );
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--forest-light)),
+      hsl(var(--primary))
+    );
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+  }
+
+}
+
+/* ========================= */
+/* UTILITIES */
+/* ========================= */
+
+@layer utilities {
+
+  .glass {
+    @apply bg-white/10 backdrop-blur-xl border border-white/20 shadow-xl;
+  }
+
+  .glass-dark {
+    @apply bg-black/20 backdrop-blur-xl border border-white/10 shadow-xl;
+  }
+
+  .gold-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(42, 76%, 50%),
+      hsl(42, 70%, 65%),
+      hsl(42, 80%, 38%)
+    );
+  }
+
+  .forest-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(145, 35%, 22%),
+      hsl(145, 40%, 12%)
+    );
+  }
+
+  .text-gold-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(42, 76%, 50%),
+      hsl(42, 70%, 65%)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-overlay {
+    background: linear-gradient(
+      to bottom,
+      hsla(145, 40%, 12%, 0.4) 0%,
+      hsla(145, 40%, 12%, 0.2) 40%,
+      hsla(145, 40%, 12%, 0.6) 100%
+    );
+  }
+
+  .section-beige {
+    background-color: hsl(40, 33%, 96%);
+  }
+
+  .section-cream {
+    background-color: hsl(40, 40%, 94%);
+  }
+}
