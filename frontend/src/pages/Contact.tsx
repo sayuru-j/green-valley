@@ -169,7 +169,7 @@ const Contact = () => {
 
                 <button
                   type="submit"
-                  className="w-full gold-gradient py-3 rounded-lg text-accent-foreground font-semibold uppercase text-sm"
+                  className="btn-primary w-full py-4 rounded-lg font-semibold tracking-wider uppercase text-sm"
                 >
                   Send Message
                 </button>
