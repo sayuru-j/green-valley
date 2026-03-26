@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import SectionHeading from "@/components/SectionHeading";
-import booking from "@/assets/booking.png";
+import booking from "@/assets/booking.jpeg";
 import { toast } from "sonner";
 import { API_BASE } from "@/lib/auth";
 
